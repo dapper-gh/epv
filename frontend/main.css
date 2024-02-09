@@ -1,0 +1,42 @@
+.invis {
+    display: none;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.normal-weight {
+    font-weight: 400;
+}
+
+body {
+    font-family: monospace;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tbody td {
+    text-align: left;
+}
+
+th, td {
+    border: 2px solid rgba(0, 0, 0, 0.6);
+    padding: 6px 8px;
+    margin: 0 0;
+}
+
+iframe {
+    border: none;
+}
+
+.expand {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.element-value {
+    margin-left: 16px;
+}

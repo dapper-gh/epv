@@ -1,0 +1,165 @@
+{
+    "users": {
+        "username": "singleuser",
+        "password": "userpassword"
+    },
+    "imap": {
+        "server": "imap.yourserver.com",
+        "port": 993,
+        "username": "coolemail@yourserver.com",
+        "password": "coolpassword",
+        "postfix": ".email.ponzi.ventures"
+    },
+    "storage": {
+        "file_root": "files",
+        "sqlite": "file:sqlite.db",
+        "frontend": "frontend"
+    },
+    "ratelimit": {
+        "num": 5,
+        "in_ms": 1000
+    },
+    "macros": [
+        {
+            "name": "BestBuy",
+            "actions": [
+                {
+                    "name": "Pair",
+                    "arguments": [
+                        [
+                            {
+                                "name": "EmailGetAttr",
+                                "arguments": "FromAddress"
+                            }
+                        ],
+                        [
+                            {
+                                "name": "EmailToHtml"
+                            },
+                            {
+                                "name": "Pair",
+                                "arguments": [
+                                    [
+                                        {
+                                            "name": "HtmlSelectCss",
+                                            "arguments": "a"
+                                        },
+                                        {
+                                            "name": "HtmlOuterHtml"
+                                        },
+                                        {
+                                            "name": "TextFilterRegex",
+                                            "arguments": "Track"
+                                        },
+                                        {
+                                            "name": "TextToHtml"
+                                        },
+                                        {
+                                            "name": "HtmlGetAttr",
+                                            "arguments": "href"
+                                        },
+                                        {
+                                            "name": "TextFilterRegex",
+                                            "arguments": "bestbuy"
+                                        },
+                                        {
+                                            "name": "TextToUrl"
+                                        },
+                                        {
+                                            "name": "UrlFollowRedirect"
+                                        },
+                                        {
+                                            "name": "UrlGetSegment",
+                                            "arguments": -1
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            "name": "HtmlSelectCss",
+                                            "arguments": "a"
+                                        },
+                                        {
+                                            "name": "HtmlGetAttr",
+                                            "arguments": "href"
+                                        },
+                                        {
+                                            "name": "TextFilterRegex",
+                                            "arguments": "skuId"
+                                        }
+                                    ]
+                                ]
+                            },
+                            {
+                                "name": "PairZipTogether"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "name": "PairDistributeLeft"
+                },
+                {
+                    "name": "Filter",
+                    "arguments": [
+                        {
+                            "name": "PairGetRight"
+                        },
+                        {
+                            "name": "PairGetLeft"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Walmart",
+            "actions": [
+                {
+                    "name": "EmailFilterRegex",
+                    "arguments": [
+                        "Subject",
+                        "Shipped:"
+                    ]
+                },
+                {
+                    "name": "Pair",
+                    "arguments": [
+                        [
+                            {
+                                "name": "EmailGetAttr",
+                                "arguments": "FromAddress"
+                            }
+                        ],
+                        [
+                            {
+                                "name": "EmailToHtml"
+                            },
+                            {
+                                "name": "Pair",
+                                "arguments": [[
+                                    {"name": "HtmlSelectCss", "arguments": "table[role=presentation] div[class*=imageHeight] img"},
+                                    {"name": "HtmlGetAttr", "arguments": "src"},
+                                    {"name": "TextToUrl"},
+                                    {"name": "UrlGetSegment", "arguments": -1},
+                                    {"name": "TextMatchRegex", "arguments": ["^(\\S+)_[\\da-f\\-\\.]+\\.[a-z]+$", "$1"]}
+                                ], [
+                                    {
+                                        "name": "HtmlSelectCss",
+                                        "arguments": "td > div > a"
+                                    },
+                                    {
+                                        "name": "HtmlInnerText"
+                                    },
+                                    {
+                                        "name": "TextFilterRegex",
+                                        "arguments": "^[A-Z0-9]+$"
+                                    }
+                                ]]
+                            }
+                        ]
+                    ]
+                }
+            ]
+        }
+    ]
+}
