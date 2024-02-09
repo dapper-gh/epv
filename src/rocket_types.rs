@@ -1,4 +1,7 @@
-use crate::{ManagedConfig, ManagedRatelimits, config::{User, Users}};
+use crate::{
+    config::{User, Users},
+    ManagedConfig, ManagedRatelimits,
+};
 use csv::{QuoteStyle, WriterBuilder};
 use rocket::http::ContentType;
 use rocket::{
@@ -182,12 +185,15 @@ impl<'r> FromRequest<'r> for AuthorizedUser<'r> {
         };
 
         if let Some(user) = match &config.users {
-            Users::Many(users) => users.iter()
+            Users::Many(users) => users
+                .iter()
                 .find(|user| user.username == username && user.password == password),
-            Users::Single(user) => if user.username == username && user.password == password {
-                Some(user)
-            } else {
-                None
+            Users::Single(user) => {
+                if user.username == username && user.password == password {
+                    Some(user)
+                } else {
+                    None
+                }
             }
         } {
             Outcome::Success(AuthorizedUser { user })
@@ -237,7 +243,7 @@ impl<'r> FromRequest<'r> for Ratelimit {
             .filter(|instant| instant.elapsed().as_millis() < config.ratelimit.in_ms)
             .copied()
             .collect();
-        if previous_requests.len() >= 5 {
+        if previous_requests.len() >= config.ratelimit.num {
             Outcome::Error((Status::TooManyRequests, Error::Ratelimited))
         } else {
             previous_requests.push(Instant::now());

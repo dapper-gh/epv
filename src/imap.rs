@@ -129,9 +129,7 @@ pub async fn perform(config: Arc<Config>, pool: Pool<Sqlite>) {
                             if postfix == config.imap.postfix.as_bytes() {
                                 return users
                                     .iter()
-                                    .find(|user_full| {
-                                        user_full.username.as_bytes() == user
-                                    })
+                                    .find(|user_full| user_full.username.as_bytes() == user)
                                     .map(|val| (val, address_to_string(to_address)));
                             }
                         }
@@ -139,9 +137,10 @@ pub async fn perform(config: Arc<Config>, pool: Pool<Sqlite>) {
 
                     None
                 }),
-                Users::Single(user) => to.iter().next().map(|to_address| {
-                    (user, address_to_string(to_address))
-                }),
+                Users::Single(user) => to
+                    .iter()
+                    .next()
+                    .map(|to_address| (user, address_to_string(to_address))),
             }) else {
                 eprintln!("IMAP no matching user");
                 continue;
