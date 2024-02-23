@@ -2,7 +2,7 @@
     function renderElement(element) {
         const elementP = document.createElement("p");
         elementP.innerText = element.type;
-        elementP.className = "bold";
+        elementP.className = "bold not-selectable";
 
         if (Array.isArray(element.value)) {
             const blockquotes = [];
@@ -20,7 +20,7 @@
                     listBlockquote.appendChild(renderElement(innerElement));
                 }
 
-                let expanded = false;
+                let expanded = true;
                 expandBtn.addEventListener("click", function() {
                     expanded = !expanded;
                     expandBtn.value = `${expanded ? "Hide" : "Expand"} ${designator}`;
@@ -38,7 +38,7 @@
         } else {
             const valueBlockquote = document.createElement("span");
             valueBlockquote.innerText = element.value;
-            valueBlockquote.className = "normal-weight element-value";
+            valueBlockquote.className = "normal-weight element-value selectable";
 
             elementP.appendChild(valueBlockquote);
         }
