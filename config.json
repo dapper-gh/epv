@@ -142,19 +142,25 @@
                                     {"name": "TextToUrl"},
                                     {"name": "UrlGetSegment", "arguments": -1},
                                     {"name": "TextMatchRegex", "arguments": ["^(\\S+)_[\\da-f\\-\\.]+\\.[a-z]+$", "$1"]}
-                                ], [
-                                    {
-                                        "name": "HtmlSelectCss",
-                                        "arguments": "td > div > a"
-                                    },
-                                    {
-                                        "name": "HtmlInnerText"
-                                    },
-                                    {
-                                        "name": "TextFilterRegex",
-                                        "arguments": "^[A-Z0-9]+$"
-                                    }
-                                ]]
+                                ], [{
+                                        "name": "Or",
+                                        "arguments": [[{
+                                            "name": "HtmlSelectCss",
+                                            "arguments": "td > div > a"
+                                        },
+                                        {
+                                            "name": "HtmlInnerText"
+                                        },
+                                        {
+                                            "name": "TextFilterRegex",
+                                            "arguments": "^[A-Z0-9]+$"
+                                        }], [{
+                                            "name": "HtmlSelectCss",
+                                            "arguments": "mj-column td a"
+                                        }, {
+                                            "name": "HtmlInnerText"
+                                        }]]
+                                    }]]
                             }
                         ]
                     ]
